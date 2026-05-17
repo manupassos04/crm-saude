@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(export PATH=\"/Users/manuella.passos/.nvm/versions/node/v24.15.0/bin:$PATH\" && nohup npm run dev > /tmp/crm-dev.log 2>&1 & *)",
+      "Bash(kill 86924)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/)",
+      "Bash(mkdir -p /Users/manuella.passos/crm-saude/src/app/\\\\\\(dashboard\\\\\\)/clientes/\\\\[id\\\\]/editar)",
+      "Bash(mkdir -p \"/Users/manuella.passos/crm-saude/src/app/\\(dashboard\\)/propostas/[id]/editar\")",
+      "Bash(npm install *)",
+      "Bash(npx tsx *)",
+      "Bash(mkdir -p /Users/manuella.passos/crm-saude/src/app/api/tabela-precos/\\\\[id\\\\] && mkdir -p /Users/manuella.passos/crm-saude/src/app/api/cotacoes)",
+      "Bash(mkdir -p \"/Users/manuella.passos/crm-saude/src/app/\\(dashboard\\)/cotacoes/nova\" && mkdir -p \"/Users/manuella.passos/crm-saude/src/app/\\(dashboard\\)/cotacoes/[id]\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/configuracoes)",
+      "Bash(grep -v \"^$\")",
+      "Bash(psql \"postgresql://postgres.fudawcgaqcqpssvauckc:Manu1912!Manu1912@aws-1-sa-east-1.pooler.supabase.com:5432/postgres?sslmode=require\" -c \"SELECT role FROM users WHERE email='manuella.passos.nh@gmail.com';\")",
+      "Bash(psql \"postgresql://postgres.fudawcgaqcqpssvauckc:Manu1912!Manu1912@aws-1-sa-east-1.pooler.supabase.com:5432/postgres?sslmode=require\" -c \"SELECT COUNT\\(*\\) FROM tabela_precos;\")",
+      "Bash(curl -s -L -c /tmp/cookies.txt -w \"\\\\n%{http_code} %{url_effective}\" http://localhost:3000/configuracoes)",
+      "Bash(curl -s \"http://localhost:3000/api/tabela-precos\" -c /tmp/nocookies.txt)",
+      "Bash(node -e \"const lr = require\\('/Users/manuella.passos/crm-saude/node_modules/lucide-react'\\); console.log\\('Check:', !!lr.Check, 'Pencil:', !!lr.Pencil, 'Settings:', !!lr.Settings\\);\")",
+      "Bash(xargs -I{} sh -c 'echo \"PID: {}\"; ps -p {} -o command | tail -1')",
+      "Bash(mkdir -p \"/Users/manuella.passos/crm-saude/src/app/api/cotacoes/[id]\")",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ],
+    "additionalDirectories": [
+      "/tmp",
+      "/Users/manuella.passos/crm-saude/src/app/(dashboard)/clientes/[id]",
+      "/Users/manuella.passos/crm-saude/src/app/(dashboard)/propostas/[id]",
+      "/Users/manuella.passos/crm-saude/src/app/api/tabela-precos",
+      "/Users/manuella.passos/crm-saude/src/app/(dashboard)/cotacoes",
+      "/Users/manuella.passos/crm-saude/src/app/api/cotacoes"
+    ]
+  }
+}

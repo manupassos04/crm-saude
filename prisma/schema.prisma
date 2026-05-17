@@ -1,0 +1,245 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Organization {
+  id       String   @id @default(cuid())
+  nome     String
+  cnpj     String?  @unique
+  criadoEm DateTime @default(now()) @map("criado_em")
+
+  usuarios      User[]
+  clientes      Cliente[]
+  propostas     Proposta[]
+  cotacoes      Cotacao[]
+  tabelaPrecos  TabelaPreco[]
+
+  @@map("organizations")
+}
+
+model User {
+  id             String       @id @default(cuid())
+  email          String       @unique
+  nome           String
+  role           RoleUsuario  @default(VENDEDOR)
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  criadoEm      DateTime     @default(now()) @map("criado_em")
+
+  @@map("users")
+}
+
+enum RoleUsuario {
+  GERENTE
+  VENDEDOR
+}
+
+model Cliente {
+  id                String       @id @default(cuid())
+  tipoPessoa        TipoPessoa   @default(PF) @map("tipo_pessoa")
+
+  // Pessoa física
+  nome              String
+  cpf               String?
+  dataNascimento    DateTime?    @map("data_nascimento")
+  sexo              Sexo?
+  estadoCivil       EstadoCivil? @map("estado_civil")
+  profissao         String?
+
+  // Pessoa jurídica
+  cnpj              String?
+  cnpjMei           Boolean      @default(false) @map("cnpj_mei")
+  razaoSocial       String?      @map("razao_social")
+
+  // Contato
+  telefoneCelular1  String       @map("telefone_celular1")
+  telefoneCelular2  String?      @map("telefone_celular2")
+  telefoneFix       String?      @map("telefone_fix")
+  emailTitular      String?      @map("email_titular")
+  emailContato1     String?      @map("email_contato1")
+  emailContato2     String?      @map("email_contato2")
+
+  // Endereço
+  cep               String?
+  logradouro        String?
+  numero            String?
+  complemento       String?
+  bairro            String?
+  cidade            String?
+  uf                String?
+  cidadePreferencia String?      @map("cidade_preferencia")
+
+  organizationId    String       @map("organization_id")
+  organization      Organization @relation(fields: [organizationId], references: [id])
+  dependentes       Dependente[]
+  propostas         Proposta[]
+  cotacoes          Cotacao[]
+  criadoEm         DateTime     @default(now()) @map("criado_em")
+
+  @@map("clientes")
+}
+
+enum TipoPessoa {
+  PF
+  PJ
+}
+
+model Dependente {
+  id             String      @id @default(cuid())
+  clienteId      String      @map("cliente_id")
+  cliente        Cliente     @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  nome           String
+  dataNascimento DateTime    @map("data_nascimento")
+  parentesco     Parentesco
+  cpf            String?
+  sexo           Sexo?
+  criadoEm      DateTime    @default(now()) @map("criado_em")
+
+  @@map("dependentes")
+}
+
+enum Sexo {
+  MASCULINO
+  FEMININO
+}
+
+enum EstadoCivil {
+  SOLTEIRO
+  CASADO
+  DIVORCIADO
+  VIUVO
+  UNIAO_ESTAVEL
+}
+
+enum Parentesco {
+  CONJUGE
+  FILHO
+  FILHA
+  PAI
+  MAE
+  IRMAO
+  IRMA
+  OUTRO
+}
+
+model Proposta {
+  id                  String              @id @default(cuid())
+  clienteId           String              @map("cliente_id")
+  cliente             Cliente             @relation(fields: [clienteId], references: [id])
+
+  // Identificação
+  propostaNumeroInterno String?           @map("proposta_numero_interno")
+  propostaNumeroOperadora String?         @map("proposta_numero_operadora")
+
+  // Plano
+  operadora           String
+  plano               String
+  tipoPlano           TipoPlano           @default(INDIVIDUAL) @map("tipo_plano")
+  formaContratacao    FormaContratacao    @default(LIVRE_ADESAO) @map("forma_contratacao")
+  acomodacao          Acomodacao          @default(ENFERMARIA)
+  abrangencia         Abrangencia         @default(NACIONAL)
+  coparticipacao      Boolean             @default(false)
+  reembolso           Boolean             @default(false)
+  quantasVidas        Int?                @map("quantas_vidas")
+
+  // Valores
+  valorSaude          Decimal             @map("valor_saude") @db.Decimal(10, 2)
+  valorOdonto         Decimal?            @map("valor_odonto") @db.Decimal(10, 2)
+  valorSOS            Decimal?            @map("valor_sos") @db.Decimal(10, 2)
+  valorAditivos       Decimal?            @map("valor_aditivos") @db.Decimal(10, 2)
+
+  // Carência
+  temCarencia         Boolean             @default(false) @map("tem_carencia")
+  aproveitamentoCarencia Boolean          @default(false) @map("aproveitamento_carencia")
+  tipoCarencia        TipoCarencia?       @map("tipo_carencia")
+  prazoCarenciaDias   Int?                @map("prazo_carencia_dias")
+
+  // Comissão e status
+  dataVigencia        DateTime            @map("data_vigencia")
+  status              StatusProposta      @default(PENDENTE)
+  comissaoPorc        Decimal             @map("comissao_porc") @db.Decimal(5, 2)
+  comissaoValor       Decimal             @map("comissao_valor") @db.Decimal(10, 2)
+  observacoes         String?
+
+  organizationId      String              @map("organization_id")
+  organization        Organization        @relation(fields: [organizationId], references: [id])
+  criadoEm           DateTime            @default(now()) @map("criado_em")
+
+  @@map("propostas")
+}
+
+enum StatusProposta {
+  PENDENTE
+  APROVADA
+  RECUSADA
+  CANCELADA
+}
+
+enum TipoPlano {
+  INDIVIDUAL
+  FAMILIAR
+  EMPRESARIAL
+  COLETIVO_ADESAO
+}
+
+enum FormaContratacao {
+  COMPULSORIO
+  LIVRE_ADESAO
+}
+
+enum Acomodacao {
+  ENFERMARIA
+  APARTAMENTO
+}
+
+enum Abrangencia {
+  LOCAL
+  ESTADUAL
+  NACIONAL
+  NACIONAL_COM_EXCLUSAO
+}
+
+enum TipoCarencia {
+  PARCIAL
+  TOTAL
+  ISENTO_PORTABILIDADE
+  ISENTO_MUDANCA_PLANO
+}
+
+model Cotacao {
+  id             String       @id @default(cuid())
+  clienteId      String?      @map("cliente_id")
+  cliente        Cliente?     @relation(fields: [clienteId], references: [id])
+  nomeCliente    String       @map("nome_cliente")
+  // vidas: { "0-18": 2, "19-23": 1, ... }
+  vidas          Json
+  // resultado: snapshot do cálculo no momento da cotação
+  resultado      Json?
+  observacoes    String?
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  criadoEm      DateTime     @default(now()) @map("criado_em")
+
+  @@map("cotacoes")
+}
+
+model TabelaPreco {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  operadora      String
+  plano          String
+  faixaEtaria    String       @map("faixa_etaria")
+  acomodacao     String       @default("SEMI_PRIVATIVO")
+  coparticipacao Boolean      @default(false)
+  valor          Decimal      @db.Decimal(10, 2)
+  atualizadoEm  DateTime     @default(now()) @updatedAt @map("atualizado_em")
+
+  @@unique([organizationId, operadora, plano, faixaEtaria, acomodacao, coparticipacao])
+  @@map("tabela_precos")
+}
