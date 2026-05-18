@@ -15,7 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "CRM Saúde",
   description: "Sistema de gestão para corretoras de planos de saúde",
-  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({
