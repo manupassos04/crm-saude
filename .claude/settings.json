@@ -23,7 +23,14 @@
       "Bash(xargs -I{} sh -c 'echo \"PID: {}\"; ps -p {} -o command | tail -1')",
       "Bash(mkdir -p \"/Users/manuella.passos/crm-saude/src/app/api/cotacoes/[id]\")",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git branch *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(git config *)",
+      "Bash(gh --version)",
+      "Bash(git commit *)"
     ],
     "additionalDirectories": [
       "/tmp",
